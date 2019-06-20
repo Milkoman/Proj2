@@ -22,7 +22,6 @@ public:
 	~FoodProcessor();
 
 	void emptyProcessor(){calTree.clear(); fatTree.clear(); carbTree.clear(); protTree.clear();}
-	int getQuadrupleCount(){return calTree.getNumNodes();}
 
 	bool replace(Food&, Food&);
 	void calRangeTraverse(void visit(Food &), int min, int max);

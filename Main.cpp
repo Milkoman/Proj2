@@ -42,9 +42,7 @@ char yesorno();
 Food * createFood();
 bool isPrime(int);
 int nextPrime(int);
-void searchVisitor(Food &obj);
 int mealPlanCreator(MealPlan &plan, List<Food> &possibilities, FoodProcessor &addTest, FoodProcessor &non_possible, Requirements req, HashMap<string, Food, MyKeyHash<string> > &HM, FoodProcessor &food_p_obj);
-int adjustedGoalMealPlanTest(MealPlan &plan, List<Food> &possibilities, FoodProcessor &addTest, FoodProcessor &non_possible, Requirements req, HashMap<string, Food, MyKeyHash<string> > &HM, FoodProcessor &food_p_obj);
 void searchFoodsOption(HashMap<string, Food, MyKeyHash<string> > &HM, FoodProcessor &food_p_obj);
 Requirements getBounds();
 void foodDisplayer(Food food);
@@ -55,9 +53,7 @@ void displayGoalsOption(Requirements req);
 void deleteFoodOption(List<Food> &possibilities, MealPlan &plan, bool hard_delete, FoodProcessor &addTest, FoodProcessor &non_possible, Requirements req);
 void addFoodOption(List<Food> &possibilities, MealPlan &plan, FoodProcessor &addTest, FoodProcessor &non_possible, Requirements req);
 void displayMealPlanMenu(bool version = true);
-void possibilityVisitor(Food &obj);
 void possibilitiesGetter(FoodProcessor &food_p_obj, Requirements req, List<Food> &possibilities);
-
 
 Queue<Food> searchResults;
 List<Food> possibilities;
@@ -131,24 +127,29 @@ int main()
 		if (selection == 1)
 		{
 			Food *item = createFood();
-			HM.add(item->getName(), item);
-			calTree.add(*item, Food::calorieLGreaterR);
+      Food temp;
+      if(HM.get(item->getName(), temp)){
+        calTree.remove(temp, Food::completeLEqualR, Food::calorieLGreaterR);
+
+      }
+      HM.add(item->getName(), item);
+      calTree.add(*item, Food::calorieLGreaterR);
 			food_p_obj.add(*item);
 		}
 		else if (selection == 2)
 		{
-			string name;
-			Food item;
-			cout << "\nWhat is the name of the item you wish to remove? ";
-			getline(cin, name);
-			if (HM.get(name, item))
-			{
-				Food item2(name,0,0,0,0);
-				HM.remove(name);
-				calTree.remove(item2);
-				dummy = food_p_obj.remove(item);
-				cout << name << " has been removed.";
-			}
+
+      string name;
+      Food item;
+      cout << "\nWhat is the name of the item you wish to remove? ";
+      getline(cin, name);
+      if(HM.get(name, item)){
+        Food item2;
+        HM.get(name, item2);
+        calTree.remove(item2, Food::completeLEqualR, Food::calorieLGreaterR);
+        HM.remove(name);
+        cout << name << " has been removed. ";
+      }
 			else
 				cout << "Does not exsist";
 		}
@@ -200,16 +201,15 @@ int main()
 		}
 		else if (selection == 8)
 		{
-			plan.emptyPlan();
-			possibilities.empty();
-			if(addTest.getQuadrupleCount() != 0)
-				addTest.emptyProcessor();
-			if(non_possible.getQuadrupleCount() != 0)
-				non_possible.emptyProcessor();
-			repeat = 0;
-
 			do
 			{
+        plan.emptyPlan();
+  			possibilities.empty();
+  			if(addTest.getNumFoods() != 0)
+  				addTest.emptyProcessor();
+  			if(non_possible.getNumFoods() != 0)
+  				non_possible.emptyProcessor();
+  			repeat = 0;
 				req = getBounds();
 				possibilitiesGetter(food_p_obj, req, possibilities);
 				holder = NULL;
@@ -220,12 +220,8 @@ int main()
 					possibilities.removeFront();
 					possibilities.insertRear(holder);
 				}
-
-				if(plan.getFoodCount() != 0)
-			    repeat = adjustedGoalMealPlanTest(plan, possibilities, addTest, non_possible, req, HM, food_p_obj);
-
-				if(repeat != 2)
-					repeat = mealPlanCreator(plan, possibilities, addTest, non_possible, req, HM, food_p_obj);
+        plan.emptyPlan();
+				repeat = mealPlanCreator(plan, possibilities, addTest, non_possible, req, HM, food_p_obj);
 
 			}while(!repeat);
 			if(repeat != 2)
@@ -365,7 +361,6 @@ void buildDatabase(Array<Food> &ary, HashMap<string, Food, MyKeyHash<string> >&H
 		HM.add(item.getName(), &ary[i]);
 		calT.add(ary[i], Food::calorieLGreaterR);
 		food_p_obj.add(ary[i]);
-		food_p_obj.getQuadrupleCount();
 	}
 }
 
@@ -477,12 +472,17 @@ void addFoodOption(List<Food> &possibilities, MealPlan &plan, FoodProcessor &add
           possibilities.removeFront();
           plan.addFood(curr2);
           searchResults.emptyQueue();
-          addTest.calIntersectTraverse(ADTStatic::loadQueue, searchResults, req.c_u - plan.getCurrCal(), req.c_u, req.f_u - plan.getCurrFat(), req.f_u, req.cb_u - plan.getCurrCarb(), req.cb_u, req.p_u - plan.getCurrProtein(), req.p_u);
-          while(searchResults.front() != NULL)
+
+          addTest.calRangeTraverse(ADTStatic::loadQueue, searchResults, req.c_u - plan.getCurrCal(), req.c_u);
+					addTest.fatRangeTraverse(ADTStatic::loadQueue, searchResults, req.f_u - plan.getCurrFat(), req.f_u);
+					addTest.carbRangeTraverse(ADTStatic::loadQueue, searchResults, req.cb_u - plan.getCurrCarb(), req.cb_u);
+					addTest.protRangeTraverse(ADTStatic::loadQueue, searchResults, req.p_u - plan.getCurrProtein(), req.p_u);
+					while(searchResults.front() != NULL)
           {
             if((searchResults.front())->getCalorie() != req.c_u - plan.getCurrCal() && (searchResults.front())->getFat() != req.f_u - plan.getCurrFat() && (searchResults.front())->getProtein() != req.p_u - plan.getCurrProtein() && (searchResults.front())->getCarb() != req.cb_u - plan.getCurrCarb())
             {
               possibilities.remove(searchResults.front(), dummy);
+							addTest.remove(*searchResults.front());
               non_possible.add(*searchResults.front());
             }
             searchResults.dequeue();
@@ -524,13 +524,24 @@ void deleteFoodOption(List<Food> &possibilities, MealPlan &plan, bool hard_delet
         {
           in_int = stoi(in_str);
           deleted_food = plan.getFood(in_int);
+					cout << "test1";
           if(deleted_food == NULL)
             throw -1;
+					cout << "test2";
+
           if(!hard_delete)
           {
             possibilities.insertRear(deleted_food);
             searchResults.emptyQueue();
-            non_possible.calIntersectTraverse(ADTStatic::loadQueue, searchResults, req.c_u - plan.getCurrCal(), req.c_u + (plan.getFood(in_int))->getCalorie() - plan.getCurrCal(), req.f_u - plan.getCurrFat() + 1, req.f_u + (plan.getFood(in_int))->getFat() - plan.getCurrFat(), req.cb_u - plan.getCurrCarb(), req.cb_u + (plan.getFood(in_int))->getCarb() - plan.getCurrCarb(), req.p_u - plan.getCurrProtein(), req.p_u + (plan.getFood(in_int))->getProtein() - plan.getCurrProtein());
+						cout << "test3";
+
+						non_possible.calRangeTraverse(ADTStatic::loadQueue, searchResults, req.c_u - plan.getCurrCal(), req.c_u + (plan.getFood(in_int))->getCalorie() - plan.getCurrCal());
+						//non_possible.fatRangeTraverse(ADTStatic::loadQueue, searchResults, req.f_u - plan.getCurrFat(), req.f_u + (plan.getFood(in_int))->getFat() - plan.getCurrFat());
+						//non_possible.carbRangeTraverse(ADTStatic::loadQueue, searchResults, req.cb_u - plan.getCurrCarb(), req.cb_u + (plan.getFood(in_int))->getCarb() - plan.getCurrCarb());
+						//non_possible.protRangeTraverse(ADTStatic::loadQueue, searchResults, req.p_u - plan.getCurrProtein(), req.p_u + (plan.getFood(in_int))->getProtein() - plan.getCurrProtein());
+						*/
+						cout << "test4";
+            //non_possible.calIntersectTraverse(ADTStatic::loadQueue, searchResults, req.c_u - plan.getCurrCal(), req.c_u + (plan.getFood(in_int))->getCalorie() - plan.getCurrCal(), req.f_u - plan.getCurrFat() + 1, req.f_u + (plan.getFood(in_int))->getFat() - plan.getCurrFat(), req.cb_u - plan.getCurrCarb(), req.cb_u + (plan.getFood(in_int))->getCarb() - plan.getCurrCarb(), req.p_u - plan.getCurrProtein(), req.p_u + (plan.getFood(in_int))->getProtein() - plan.getCurrProtein());
             while(searchResults.front() != NULL)
             {
               if((searchResults.front())->getCalorie() != req.c_u - plan.getCurrCal() && (searchResults.front())->getFat() != req.f_u - plan.getCurrFat() && (searchResults.front())->getProtein() != req.p_u - plan.getCurrProtein() && (searchResults.front())->getCarb() != req.cb_u - plan.getCurrCarb())
@@ -737,88 +748,6 @@ void searchFoodsOption(HashMap<string, Food, MyKeyHash<string> > &HM, FoodProces
   }while(big_repeat);
 }
 
-int adjustedGoalMealPlanTest(MealPlan &plan, List<Food> &possibilities, FoodProcessor &addTest, FoodProcessor &non_possible, Requirements req, HashMap<string, Food, MyKeyHash<string> > &HM, FoodProcessor &food_p_obj)
-{
-  bool OptionH;
-  bool OptionB = false;
-  char answer;
-	bool hard_exit = false;
-
-  while(!OptionB && !hard_exit && (plan.getCurrCal() > req.c_u || plan.getCurrFat() > req.f_u || plan.getCurrCarb() > req.cb_u || plan.getCurrProtein() > req.p_u))
-  {
-    if(!OptionB && !hard_exit)
-    {
-      OptionH = false;
-      cout << endl << "Your current meal plan totals are out of your goal ranges. Please adjust your meal plan." << endl;
-      while(!OptionH)
-      {
-        displayMealPlanMenu(false);
-
-        cin >> answer;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-        if(answer == 'A' || answer == 'a')
-        {
-          deleteFoodOption(possibilities, plan, true, addTest, non_possible, req);
-        }
-
-        else if(answer == 'B' || answer == 'b')
-        {
-          OptionB = true;
-        }
-
-        else if(answer == 'C' || answer == 'c')
-        {
-          searchFoodsOption(HM, food_p_obj);
-        }
-
-        else if(answer == 'D' || answer == 'd')
-        {
-          emptyMealPlanOption(plan, possibilities);
-        }
-
-        else if(answer == 'E' || answer == 'e')
-        {
-          displayMealPlanOption(plan);
-        }
-
-        else if(answer == 'F' || answer == 'f')
-        {
-          displayGoalsOption(req);
-        }
-
-        else if(answer == 'G' || answer == 'g')
-        {
-          displayCurrentTotalsOption(plan);
-        }
-
-        else if(answer == 'H' || answer == 'h')
-        {
-          OptionH = true;
-        }
-
-				else if(answer == 'I' || answer == 'i')
-				{
-					hard_exit = true;
-				}
-
-        else
-        {
-          cout << endl << "The value entered was invalid. Please try again." << endl;
-        }
-      }
-    }
-  }
-  if(!OptionB)
-    cout << endl << endl << "Your current meal plan is within your goal range!" << endl;
-	if(OptionH)
-  	return 2;
-	else if(OptionB)
-		return 0;
-	else
-		return 1;
-}
-
 int mealPlanCreator(MealPlan &plan, List<Food> &possibilities, FoodProcessor &addTest, FoodProcessor &non_possible, Requirements req, HashMap<string, Food, MyKeyHash<string> > &HM, FoodProcessor &food_p_obj)
 {
   char answer;
@@ -899,20 +828,9 @@ int mealPlanCreator(MealPlan &plan, List<Food> &possibilities, FoodProcessor &ad
   }while(loop_again);
 }
 
-
-void searchVisitor(Food &obj)
-{
-  searchResults.enqueue(&obj);
-}
-
 void possibilitiesGetter(FoodProcessor &food_p_obj, Requirements req, List<Food> &possibilities)
 {
 	food_p_obj.calIntersectTraverse(ADTStatic::loadLinkedList, possibilities, req.c_l, req.c_u, req.f_l, req.f_u, req.cb_l, req.cb_u, req.p_l, req.p_u);
-}
-
-void possibilityVisitor(Food &obj)
-{
-	possibilities.insertRear(&obj);
 }
 
 Requirements getBounds()
