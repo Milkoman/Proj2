@@ -31,7 +31,7 @@ public:
 	}
 	T& operator[](int index) { if (index >= 0 && index < size) return data[index]; else throw OutOfBounds(); }
 
-	template <class T>
+	template <class U>
 	friend ostream &operator<< (ostream &, const Array<T> &);
 
 };

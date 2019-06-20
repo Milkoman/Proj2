@@ -33,11 +33,11 @@ class BinaryNode
 		T & getData() const { return *data; }
 		BinaryNode<T> * getLeftPtr() const { return left; }
 		BinaryNode<T> * getRightPtr() const { return right; }
-		
+
 		//Methods
 		bool isLeaf() const { return left == nullptr && right == nullptr; }
 
-		template <class T>
+		template <class U>
 		friend ostream &operator<< (ostream &, const BinaryNode<T> &);
 
 

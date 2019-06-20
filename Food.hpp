@@ -42,6 +42,8 @@ class Food
 		friend istream &operator>> (istream &, Food &);
 		bool operator== (const Food &obj){return (name == obj.getName() && calorie == obj.getCalorie() && fat == obj.getFat() && carb == obj.getCarb() && protein == obj.getProtein());}
 		bool operator> (const Food &);
+		//Food& operator= (const Food &obj){name = obj.getName(); calorie = obj.getCalorie(); fat = obj.getFat(); carb = obj.getCarb(); protein = obj.getProtein(); return *this;}
+
 		//Methods
 		static bool calorieLGreaterR(const Food &, const Food &);
 		static bool fatLGreaterR(const Food &, const Food &);

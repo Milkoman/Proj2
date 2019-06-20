@@ -1,0 +1,63 @@
+31
+mushroom
+15 0 3 2
+wheat bread
+67 1 12 2
+green beans
+34 0 8 2
+almonds
+164 14 5 6
+egg
+74 5 0 7
+apple
+95 0 25 1
+rice
+204 1 44 4
+grapes
+62 0 16 1
+white bread
+66 1 12 2
+strawberries
+50 0 11 1
+peanut butter
+190 16 6 7
+yogurt
+143 4 16 12
+ground beef
+232 16 0 21
+banana
+105 0 27 1
+steak
+285 18 0 30
+chocolate
+152 8 17 2
+salmon
+166 7 0 24
+milk
+146 8 11 8
+Big Mac
+540 28 46 25
+bell peper
+31 0 8 1
+corn
+132 2 29 5
+potatoes
+194 4 36 4
+sugar
+16 0 4 0
+cheese
+113 9 0 7
+kiwi
+42 0 10 1
+chicken breast
+164 7 0 25
+yellow squash
+18 0 4 1
+broccoli
+31 0 6 3
+chicken thigh
+135 8 0 14
+tuna
+70 1 0 16
+oatmeal
+145 2 25 6

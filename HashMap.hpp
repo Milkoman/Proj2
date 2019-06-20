@@ -1,19 +1,27 @@
-#ifndef HASHTABLE_H
-#define HASHTABLE_H
-#include "hashNode.hpp"
+#ifndef HASHMAP_H
+#define HASHMAP_H
+#include "HashNode.hpp"
+
 
 // Default hash function class
 template <typename K>
-struct KeyHash
+struct MyKeyHash
 {
-	int operator()(const K &key, int size) const
+	int operator()(const string &k, int s) const
 	{
-		//DO STUFF
+		int i = 0;
+		int temp = 0;
+		while (k[i])
+		{
+			temp += k[i];
+			i++;
+		}
+		return temp % s;
 	}
 };
 
-template <typename K, typename V, typename F = KeyHash<K>>
-class HashMap 
+template <typename K, typename V, typename F = MyKeyHash<K> >
+class HashMap
 {
 	private:
 		HashNode<K, V> **table;
@@ -91,17 +99,17 @@ inline void HashMap<K, V, F>::add(const K & key, V * value)
 	if (entry == nullptr)
 	{
 		entry = new HashNode<K, V>(key, value);
-		
-		if (prev == nullptr) 
+
+		if (prev == nullptr)
 		{
 			table[hashValue] = entry; // insert as first bucket
 		}
-		else 
+		else
 		{
 			prev->setNext(entry);
 		}
 	}
-	else 
+	else
 	{
 		entry->setData(value); // just update the value
 	}
@@ -126,11 +134,11 @@ inline void HashMap<K, V, F>::remove(const K & key)
 
 	else
 	{
-		if (prev == nullptr) 
+		if (prev == nullptr)
 		{
 			table[hashValue] = entry->getNext(); // remove first bucket of the list
 		}
-		else 
+		else
 		{
 			prev->setNext(entry->getNext());
 		}
@@ -253,4 +261,3 @@ inline double HashMap<K, V, F>::getLoadFactor() const
 	}
 	return numNodes/num;
 }
-

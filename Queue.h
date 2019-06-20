@@ -29,6 +29,17 @@ class Queue : protected List<T>
 	};
 
   /*
+  overloaded enqueue -> takes in dummy bool as well
+  inserts node containing data of type T to rear of queue
+  pre: value
+  post: value inserted at rear of queue
+  */
+    void enqueue(T &value, bool a)
+	{
+		this->insertRear(&value);
+	};
+
+  /*
   removes node from front of queue
   pre: none
   post: node @ front of queue removed

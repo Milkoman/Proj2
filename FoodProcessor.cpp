@@ -20,6 +20,11 @@ void FoodProcessor::intersect(void visit(Food &) , bool LGR(const Food &, const 
 }
 
 
+
+
+
+
+
 FoodProcessor::FoodProcessor()
 {
 }
@@ -114,7 +119,7 @@ void FoodProcessor::add(Food &food)
 	protTree.add(food, Food::proteinLGreaterR);
 }
 
-bool FoodProcessor::remove( Food& food)
+bool FoodProcessor::remove(const Food& food)
 {
-	return calTree.remove(food, Food::completeLEqualR, Food::calorieLGreaterR) && fatTree.remove(food, Food::completeLEqualR, Food::fatLGreaterR) && carbTree.remove(food, Food::completeLEqualR, Food::carbLGreaterR) && protTree.remove(food, Food::completeLEqualR, Food::proteinLGreaterR);
+	return calTree.remove(food) && fatTree.remove(food) && carbTree.remove(food) && protTree.remove(food);
 }

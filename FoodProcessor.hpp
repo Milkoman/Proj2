@@ -16,16 +16,28 @@ private:
 
 	template<template <class V> class U>
 	void intersect(void visit(U<Food> &, Food &), U<Food> & obj, bool LGR(const Food &, const Food &), Food & minF, Food & maxF);
-	
+
 public:
 	FoodProcessor();
 	~FoodProcessor();
+
+	void emptyProcessor(){calTree.clear(); fatTree.clear(); carbTree.clear(); protTree.clear();}
+	int getQuadrupleCount(){return calTree.getNumNodes();}
 
 	bool replace(Food&, Food&);
 	void calRangeTraverse(void visit(Food &), int min, int max);
 	void fatRangeTraverse(void visit(Food &), int min, int max);
 	void carbRangeTraverse(void visit(Food &), int min, int max);
 	void protRangeTraverse(void visit(Food &), int min, int max);
+
+  template<template<class V> class U>
+	void calRangeTraverse(void visit(U<Food> &,Food &), U<Food>&, int min, int max);
+	template<template<class V> class U>
+	void fatRangeTraverse(void visit(U<Food> &,Food &), U<Food>&, int min, int max);
+	template<template<class V> class U>
+	void carbRangeTraverse(void visit(U<Food> &,Food &), U<Food>&, int min, int max);
+	template<template<class V> class U>
+	void protRangeTraverse(void visit(U<Food> &,Food &), U<Food>&, int min, int max);
 
 	void calIntersectTraverse(void visit(Food &), int minCal, int maxCal, int minFat, int maxFat, int minCarb, int maxCarb, int minProt, int maxProt);
 	void fatIntersectTraverse(void visit(Food &), int minCal, int maxCal, int minFat, int maxFat, int minCarb, int maxCarb, int minProt, int maxProt);
@@ -44,10 +56,50 @@ public:
 	int getNumFoods() { return calTree.getNumNodes(); };
 
 	void add(Food &);
-	bool remove( Food&);
+	bool remove(const Food&);
 
-	
+
 };
+
+template<template<class V> class U>
+inline void FoodProcessor::calRangeTraverse(void visit(U<Food> &, Food &), U<Food> &obj, int min, int max)
+{
+	Food minF;
+	Food maxF;
+	minF.setCalorie(min);
+	maxF.setCalorie(max);
+	calTree.inorderBoundedTraverse(visit, obj, Food::calorieLGreaterR, minF, maxF);
+}
+
+template<template<class V> class U>
+inline void FoodProcessor::fatRangeTraverse(void visit(U<Food> &, Food &), U<Food> &obj, int min, int max)
+{
+	Food minF;
+	Food maxF;
+	minF.setFat(min);
+	maxF.setFat(max);
+	fatTree.inorderBoundedTraverse(visit, obj, Food::fatLGreaterR, minF, maxF);
+}
+
+template<template<class V> class U>
+inline void FoodProcessor::carbRangeTraverse(void visit(U<Food> &, Food &), U<Food> &obj, int min, int max)
+{
+	Food minF;
+	Food maxF;
+	minF.setCarb(min);
+	maxF.setCarb(max);
+	carbTree.inorderBoundedTraverse(visit, obj, Food::carbLGreaterR, minF, maxF);
+}
+
+template<template<class V> class U>
+inline void FoodProcessor::protRangeTraverse(void visit(U<Food> &, Food &), U<Food> &obj, int min, int max)
+{
+	Food minF;
+	Food maxF;
+	minF.setProtein(min);
+	maxF.setProtein(max);
+	protTree.inorderBoundedTraverse(visit, obj, Food::proteinLGreaterR, minF, maxF);
+}
 
 template<template<class V> class U>
 inline void FoodProcessor::intersect(void visit(U<Food> &, Food &), U<Food>& obj, bool LGR(const Food &, const Food &), Food & minF, Food & maxF)
@@ -61,7 +113,7 @@ inline void FoodProcessor::intersect(void visit(U<Food> &, Food &), U<Food>& obj
 	tree1.clear();
 
 	tree2.inorderBoundedTraverse(ADTStatic::loadBinaryTree, tree1, Food::carbLGreaterR, Food::proteinLGreaterR, minF, maxF);
-	
+
 	tree2.clear();
 	tree1.inorderBoundedTraverse(ADTStatic::loadBinaryTree, tree2, Food::proteinLGreaterR, LGR, minF, maxF);
 	tree2.inorderTraverse(visit, obj);
@@ -101,5 +153,3 @@ inline void FoodProcessor::protIntersectTraverse(void visit(U<Food> &, Food &), 
 }
 
 #endif // !FOODPROCESSOR_H
-
-

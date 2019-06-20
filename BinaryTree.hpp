@@ -2,7 +2,7 @@
 #define BINARYTREE_H
 #include <string>
 #include "BinaryNode.hpp"
-#include "Queue.hpp"
+#include "Queue.h"
 
 //Exception class
 class EmptyTree {};
@@ -75,7 +75,7 @@ protected:
 	template<template<class V> class U>
 	void postorder(void visit(U<T>&, T&, bool LgreaterR(const T &, const T &)), BinaryNode<T>* treePtr, U<T>& obj, bool LGreaterR(const T &, const T &)) const;
 
-	
+
 	void breadthFirstBounded(void visit(T&), BinaryNode<T>* treePtr, bool leftGreaterThanRight(const T&, const T&), const T& min, const T& max) const;
 	void preorderBounded(void visit(T&), BinaryNode<T>* treePtr, bool leftGreaterThanRight(const T&, const T&), const T& min, const T& max) const;
 	void inorderBounded(void visit(T &), BinaryNode<T>* treePtr, bool leftGreaterThanRight(const T &, const T &), const T & min, const T & max) const;
@@ -120,7 +120,6 @@ public:
 	bool remove(const T& target);
 	bool remove(T & target, bool LER(const T &, const T &), bool LGR(const T &, const T &));
 	T& search(const T & datain);
-	T& search(T & datain, bool LER(const T &, const T &), bool LGR(const T &, const T &));
 	void clear();
 	bool replace(T & data, T &);
 	bool replace(T & data, T &, bool LER(const T &, const T &), bool LGR(const T &, const T &));
@@ -169,7 +168,7 @@ public:
 	template<template<class V> class U>
 	void postorderTraverse(void visit(U<T>&, T&, bool LgreaterR(const T &, const T &)), U<T>& obj, bool LGreaterR(const T &, const T &)) const { postorder(visit, root, obj, LGreaterR); }
 
-	   
+
 	template<template<class V> class U>
 	void breadthFirstBoundedTraverse(void visit(U<T>&, T&), U<T>& obj, bool LGreaterR(const T &, const T &), const T & min, const T & max) const { breadthFirstBounded(visit, root, obj, LGreaterR, min, max); }
 	template<template<class V> class U>
@@ -188,7 +187,7 @@ public:
 	template<template<class V> class U>
 	void postorderBoundedTraverse(void visit(U<T>&, T&, bool LgreaterR(const T &, const T &)), U<T>& obj, bool LGreaterRT(const T &, const T &), bool LGreaterRP(const T &, const T &), const T & min, const T & max) const { postorderBounded(visit, root, obj, LGreaterRT, LGreaterRP, min, max); }
 
-	template <class T>
+	template <class U>
 	friend ostream &operator<< (ostream &, const BinaryTree<T> &);
 
 };
@@ -849,7 +848,7 @@ inline void BinaryTree<T>::inorderBounded(void visit(T &), BinaryNode<T>* treePt
 		if (!leftGreaterThanRight(min, treePtr->getData())) {
 			inorderBounded(visit, treePtr->getLeftPtr(), leftGreaterThanRight, min, max);
 		}
-		
+
 		if (!leftGreaterThanRight(min, treePtr->getData()) && !leftGreaterThanRight(treePtr->getData(), max)) {
 			visit(treePtr->getData());
 		}
@@ -858,7 +857,7 @@ inline void BinaryTree<T>::inorderBounded(void visit(T &), BinaryNode<T>* treePt
 			inorderBounded(visit, treePtr->getRightPtr(), leftGreaterThanRight, min, max);
 		}
 
-		
+
 	}
 }
 template<class T>
@@ -866,7 +865,7 @@ inline void BinaryTree<T>::postorderBounded(void visit(T&), BinaryNode<T>* treeP
 {
 	if (treePtr)
 	{
-		
+
 		if (!leftGreaterThanRight(min, treePtr->getData())) {
 			postorderBounded(visit, treePtr->getLeftPtr(), leftGreaterThanRight, min, max);
 		}
@@ -892,7 +891,7 @@ inline void BinaryTree<T>::breadthFirstBounded(void visit(T&), BinaryNode<T>* tr
 		if (!leftGreaterThanRight(min, active->getData()) && !leftGreaterThanRight(active->getData(), max)) {
 			visit(active->getData());
 		}
-		
+
 		if (!leftGreaterThanRight(min, active->getData()) && active->getLeftPtr()) { queue.enqueue(active->getLeftPtr()); }
 		if (!leftGreaterThanRight(active->getData(), max) && active->getRightPtr()) { queue.enqueue(active->getRightPtr()); }
 
@@ -1189,15 +1188,6 @@ inline T& BinaryTree<T>::search(const T & dataIn)
 	else
 		throw NotFound();
 }
-
-template<class T>
-inline T& BinaryTree<T>::search(T & dataIn, bool LER(const T &, const T &), bool LGR(const T &, const T &))
-{
-	if (findNode(root, dataIn, LER, LGR))
- 		return dataIn;
-	else
-		throw NotFound();
-}
 /*
 	Pre:
 	Perameters:
@@ -1272,5 +1262,3 @@ inline void inorder(void visit(U&,T&), U & othercls, BinaryNode<T>* treePtr)
 
 
 #endif
-
-
