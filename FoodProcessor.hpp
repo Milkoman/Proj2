@@ -3,7 +3,7 @@
 #include "BinaryTree.hpp"
 #include "ADTStatic.hpp"
 #include "Food.hpp"
-#include "Queue.h"
+#include "Queue.hpp"
 
 class FoodProcessor
 {
@@ -44,7 +44,9 @@ public:
 	int getNumFoods() { return calTree.getNumNodes(); };
 
 	void add(Food &);
-	bool remove(const Food&);
+	bool remove(Food&);
+
+	Food & search(Food & data) { return calTree.search(data, Food::completeLEqualR, Food::calorieLGreaterR); };
 
 	
 };

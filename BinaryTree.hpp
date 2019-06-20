@@ -2,7 +2,7 @@
 #define BINARYTREE_H
 #include <string>
 #include "BinaryNode.hpp"
-#include "Queue.h"
+#include "Queue.hpp"
 
 //Exception class
 class EmptyTree {};
@@ -120,6 +120,7 @@ public:
 	bool remove(const T& target);
 	bool remove(T & target, bool LER(const T &, const T &), bool LGR(const T &, const T &));
 	T& search(const T & datain);
+	T& search(T & datain, bool LER(const T &, const T &), bool LGR(const T &, const T &));
 	void clear();
 	bool replace(T & data, T &);
 	bool replace(T & data, T &, bool LER(const T &, const T &), bool LGR(const T &, const T &));
@@ -1185,6 +1186,15 @@ inline T& BinaryTree<T>::search(const T & dataIn)
 {
 	if (findNode(root, dataIn))
 		return dataIn;
+	else
+		throw NotFound();
+}
+
+template<class T>
+inline T& BinaryTree<T>::search(T & dataIn, bool LER(const T &, const T &), bool LGR(const T &, const T &))
+{
+	if (findNode(root, dataIn, LER, LGR))
+ 		return dataIn;
 	else
 		throw NotFound();
 }
