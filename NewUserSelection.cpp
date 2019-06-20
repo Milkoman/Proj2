@@ -68,7 +68,7 @@ int main()
 
   //this should be the last food processor object (ie FoodProcessor with only foods that meet requirements)
   FoodProcessor addTest;
-  
+
   //this variable should just be the variable that is used in the huge while loop
   bool x;
 
@@ -392,7 +392,7 @@ void searchFoodsOption(HashTable<sting, Food, MyKeyHash> &HM, FoodProcessor &foo
           cout << endl << "Search Results:" << endl;
           while(searchResults.front() != NULL)
           {
-            foodDisplayer(*searchResults.front())
+            foodDisplayer(*searchResults.front());
             searchResults.dequeue();
           }
         }

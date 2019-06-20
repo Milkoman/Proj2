@@ -181,6 +181,32 @@ class List
 			return ordered;
 		}
 
+				/*
+		returns data in first node
+		pre: none
+		post: data
+		*/
+		T* getFirst()
+		{
+			if(getCount() != 0)
+				return head->getData();
+			else
+				return NULL;
+		}
+
+		/*
+		returns data in last node
+		pre: none
+		post: data
+		*/
+		T* getLast()
+		{
+			if(getCount() != 0)
+				return rear->getData();
+			else
+				return NULL;
+		}
+
 		/*
 		overloaded assignment operator
 		pre: LL object

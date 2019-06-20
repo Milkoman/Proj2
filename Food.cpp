@@ -9,8 +9,13 @@ Food::Food()
 	protein = 0;
 }
 
-Food::Food(const string n, const int cal, const int f, const int c, const int p) : name(n), calorie(cal), fat(f), carb(c), protein(p)
+Food::Food(const string n, const int cal, const int f, const int c, const int p)
 {
+	name = n;
+	calorie = cal;
+	fat = f;
+	carb = c;
+	protein = p;
 }
 
 bool Food::operator>(const Food &right)
@@ -22,61 +27,20 @@ bool Food::operator>(const Food &right)
 	return status;
 }
 
-bool Food::calorieLGreaterR(const Food & left, const Food & right)
+bool Food::calorieGreater(const Food &right) const
 {
-	return left.calorie > right.calorie;
+	bool status = false;
+	if (calorie > right.calorie)
+		status = true;
+	return status;
 }
 
-bool Food::fatLGreaterR(const Food & left, const Food & right)
+bool Food::fatGreater(const Food &right) const
 {
-	return left.fat > right.fat;
-}
-
-bool Food::carbLGreaterR(const Food & left, const Food & right)
-{
-	return left.carb > right.carb;
-}
-
-bool Food::proteinLGreaterR(const Food & left, const Food & right)
-{
-	return left.protein > right.protein;
-}
-
-bool Food::calorieLLessR(const Food & left, const Food & right)
-{
-	return left.calorie < right.calorie;
-}
-bool Food::fatLLessR(const Food & left, const Food & right)
-{
-	return left.fat < right.fat;
-}
-bool Food::carbLLessR(const Food & left, const Food & right)
-{
-	return left.carb < right.carb;
-}
-bool Food::calorieLEqualR(const Food & left, const Food & right)
-{
-	return left.calorie == right.calorie;
-}
-bool Food::fatLEqualR(const Food & left, const Food & right)
-{
-	return left.fat == right.fat;
-}
-bool Food::proteinLEqualR(const Food & left, const Food & right)
-{
-	return left.protein == right.protein;
-}
-bool Food::carbLEqualR(const Food & left, const Food & right)
-{
-	return left.carb == right.carb;
-}
-bool Food::completeLEqualR(const Food &left, const Food &right)
-{
-	return left.name == right.name && left.calorie == right.calorie && left.fat == right.fat && left.carb == right.carb && left.protein == right.protein;
-}
-bool Food::proteinLLessR(const Food & left, const Food & right)
-{
-	return left.protein < right.protein;
+	bool status = false;
+	if (fat > right.fat)
+		status = true;
+	return status;
 }
 
 ostream & operator<<(ostream &strm, const Food &obj)
@@ -84,13 +48,6 @@ ostream & operator<<(ostream &strm, const Food &obj)
 	strm << obj.name << " " << obj.calorie << " " << obj.fat << " " << obj.carb << " " << obj.protein;
 	return strm;
 }
-
-ostream & operator<<=(ostream &strm, const Food &obj)
-{
-	strm << obj.name << "\n" << obj.calorie << " " << obj.fat << " " << obj.carb << " " << obj.protein << "\n";
-	return strm;
-}
-
 
 istream & operator>>(istream &strm, Food &obj)
 {
