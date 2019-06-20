@@ -1,6 +1,6 @@
 #ifndef ADTSTATIC_H
 #define ADTSTATIC_H
-#include "Queue.h"
+#include "Queue.hpp"
 #include "BinaryTree.hpp"
 
 class ADTStatic
