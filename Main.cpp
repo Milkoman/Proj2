@@ -40,8 +40,8 @@ void buildDatabase(Array<Food> &, HashMap<string, Food, MyKeyHash>&, BinaryTree<
 template <class T>
 void input(T &a, const char * error = "");
 
-//template<class T>
-//void write(T data, ostream &outfile) { outfile <<= data; }
+template<class T>
+void write(T data, ostream &outfile) { outfile <<= data; }
 
 //olly
 template <class T>
@@ -104,9 +104,10 @@ int main()
 			getline(cin, name);
 			if (HM.get(name, item))
 			{
-				Food item2(name,0,0,0,0);
+				Food item2;
+				HM.get(name, item2);
+				calTree.remove(item2, Food::completeLEqualR, Food::calorieLGreaterR);
 				HM.remove(name);
-				calTree.remove(item2);
 				cout << name << " has been removed.";
 			}
 			else
@@ -298,7 +299,7 @@ void buildDatabase(Array<Food> &ary, HashMap<string, Food, MyKeyHash>&HM, Binary
 void writeFile(HashMap<string, Food, MyKeyHash>&HM)
 {
 	ofstream file;
-	file.open("foodData.txt");
+	file.open("outFile.txt");
 	file << HM.getNumNodes() << '\n';
 	HM.traverse(write, file);
 	file.close();

@@ -20,11 +20,6 @@ void FoodProcessor::intersect(void visit(Food &) , bool LGR(const Food &, const 
 }
 
 
-
-
-
-
-
 FoodProcessor::FoodProcessor()
 {
 }
@@ -70,8 +65,8 @@ void FoodProcessor::protRangeTraverse(void visit(Food &), int min, int max)
 {
 	Food minF;
 	Food maxF;
-	minF.setProtien(min);
-	maxF.setProtien(max);
+	minF.setProtein(min);
+	maxF.setProtein(max);
 	protTree.inorderBoundedTraverse(visit, Food::proteinLGreaterR, minF, maxF);
 }
 
@@ -119,7 +114,7 @@ void FoodProcessor::add(Food &food)
 	protTree.add(food, Food::proteinLGreaterR);
 }
 
-bool FoodProcessor::remove(Food& food)
+bool FoodProcessor::remove( Food& food)
 {
 	return calTree.remove(food, Food::completeLEqualR, Food::calorieLGreaterR) && fatTree.remove(food, Food::completeLEqualR, Food::fatLGreaterR) && carbTree.remove(food, Food::completeLEqualR, Food::carbLGreaterR) && protTree.remove(food, Food::completeLEqualR, Food::proteinLGreaterR);
 }
