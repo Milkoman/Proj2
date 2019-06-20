@@ -8,6 +8,7 @@ using std::istream;
 
 class Food;
 ostream &operator<< (ostream &, const Food &);
+ostream &operator<<= (ostream &, const Food &);
 istream &operator>> (istream &, Food &);
 
 class Food
@@ -37,6 +38,7 @@ class Food
 		int getProtein() const { return protein; }
 		//Operators
 		friend ostream &operator<< (ostream &, const Food &);
+		friend ostream &operator<<= (ostream &, const Food &);
 		friend istream &operator>> (istream &, Food &);
 		bool operator== (const Food &obj){return (name == obj.getName() && calorie == obj.getCalorie() && fat == obj.getFat() && carb == obj.getCarb() && protein == obj.getProtein());}
 		bool operator> (const Food &);

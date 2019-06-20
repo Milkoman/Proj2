@@ -9,13 +9,8 @@ Food::Food()
 	protein = 0;
 }
 
-Food::Food(const string n, const int cal, const int f, const int c, const int p)
+Food::Food(const string n, const int cal, const int f, const int c, const int p) : name(n), calorie(cal), fat(f), carb(c), protein(p)
 {
-	name = n;
-	calorie = cal;
-	fat = f;
-	carb = c;
-	protein = p;
 }
 
 bool Food::operator>(const Food &right)
@@ -89,6 +84,13 @@ ostream & operator<<(ostream &strm, const Food &obj)
 	strm << obj.name << " " << obj.calorie << " " << obj.fat << " " << obj.carb << " " << obj.protein;
 	return strm;
 }
+
+ostream & operator<<=(ostream &strm, const Food &obj)
+{
+	strm << obj.name << "\n" << obj.calorie << " " << obj.fat << " " << obj.carb << " " << obj.protein << "\n";
+	return strm;
+}
+
 
 istream & operator>>(istream &strm, Food &obj)
 {
